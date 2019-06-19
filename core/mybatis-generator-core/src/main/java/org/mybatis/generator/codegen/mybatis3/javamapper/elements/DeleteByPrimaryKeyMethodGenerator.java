@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2015 the original author or authors.
+ *    Copyright 2006-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ public class DeleteByPrimaryKeyMethodGenerator extends
         AbstractJavaMapperMethodGenerator {
 
     private boolean isSimple;
-    
+
     public DeleteByPrimaryKeyMethodGenerator(boolean isSimple) {
         super();
         this.isSimple = isSimple;
@@ -43,11 +43,11 @@ public class DeleteByPrimaryKeyMethodGenerator extends
 
     @Override
     public void addInterfaceElements(Interface interfaze) {
-        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
-        Method method = new Method();
+        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<>();
+        Method method = new Method(introspectedTable.getDeleteByPrimaryKeyStatementId());
         method.setVisibility(JavaVisibility.PUBLIC);
+        method.setAbstract(true);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
-        method.setName(introspectedTable.getDeleteByPrimaryKeyStatementId());
 
         if (!isSimple && introspectedTable.getRules().generatePrimaryKeyClass()) {
             FullyQualifiedJavaType type = new FullyQualifiedJavaType(
@@ -87,16 +87,19 @@ public class DeleteByPrimaryKeyMethodGenerator extends
         context.getCommentGenerator().addGeneralMethodComment(method,
                 introspectedTable);
 
-        addMapperAnnotations(interfaze, method);
+        addMapperAnnotations(method);
         
         if (context.getPlugins().clientDeleteByPrimaryKeyMethodGenerated(
                 method, interfaze, introspectedTable)) {
+            addExtraImports(interfaze);
             interfaze.addImportedTypes(importedTypes);
             interfaze.addMethod(method);
         }
     }
 
-    public void addMapperAnnotations(Interface interfaze, Method method) {
-        return;
+    public void addMapperAnnotations(Method method) {
+    }
+
+    public void addExtraImports(Interface interfaze) {
     }
 }

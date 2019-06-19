@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2015 the original author or authors.
+ *    Copyright 2006-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,8 +29,8 @@ import org.xml.sax.SAXException;
 public class ParserEntityResolver implements EntityResolver {
 
     /**
-	 *  
-	 */
+     *  
+     */
     public ParserEntityResolver() {
         super();
     }
@@ -41,15 +41,10 @@ public class ParserEntityResolver implements EntityResolver {
      * @see org.xml.sax.EntityResolver#resolveEntity(java.lang.String,
      * java.lang.String)
      */
+    @Override
     public InputSource resolveEntity(String publicId, String systemId)
             throws SAXException, IOException {
-        if (XmlConstants.IBATOR_CONFIG_PUBLIC_ID.equalsIgnoreCase(publicId)) {
-            InputStream is = getClass().getClassLoader().getResourceAsStream(
-                    "org/mybatis/generator/config/xml/ibator-config_1_0.dtd"); //$NON-NLS-1$
-            InputSource ins = new InputSource(is);
-
-            return ins;
-        } else if (XmlConstants.MYBATIS_GENERATOR_CONFIG_PUBLIC_ID
+        if (XmlConstants.MYBATIS_GENERATOR_CONFIG_PUBLIC_ID
                 .equalsIgnoreCase(publicId)) {
             InputStream is = getClass()
                     .getClassLoader()

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2015 the original author or authors.
+ *    Copyright 2006-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,17 +27,21 @@ import org.mybatis.generator.api.dom.java.Method;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
 import org.mybatis.generator.config.PropertyRegistry;
 
-/**
- * 
- * @author Jeff Butler
- * 
- */
 public abstract class AbstractJavaGenerator extends AbstractGenerator {
     public abstract List<CompilationUnit> getCompilationUnits();
+    
+    private String project;
+    
+    public AbstractJavaGenerator(String project) {
+        this.project = project;
+    }
+    
+    public String getProject() {
+        return project;
+    }
 
     public static Method getGetter(Field field) {
-        Method method = new Method();
-        method.setName(getGetterMethodName(field.getName(), field
+        Method method = new Method(getGetterMethodName(field.getName(), field
                 .getType()));
         method.setReturnType(field.getType());
         method.setVisibility(JavaVisibility.PUBLIC);
@@ -62,12 +66,15 @@ public abstract class AbstractJavaGenerator extends AbstractGenerator {
     }
 
     protected void addDefaultConstructor(TopLevelClass topLevelClass) {
-        Method method = new Method();
+        topLevelClass.addMethod(getDefaultConstructor(topLevelClass));
+    }
+
+    protected Method getDefaultConstructor(TopLevelClass topLevelClass) {
+        Method method = new Method(topLevelClass.getType().getShortName());
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setConstructor(true);
-        method.setName(topLevelClass.getType().getShortName());
         method.addBodyLine("super();"); //$NON-NLS-1$
         context.getCommentGenerator().addGeneralMethodComment(method, introspectedTable);
-        topLevelClass.addMethod(method);
+        return method;
     }
 }

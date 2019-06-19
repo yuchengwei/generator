@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2015 the original author or authors.
+ *    Copyright 2006-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ public class SelectByPrimaryKeyMethodGenerator extends
         AbstractJavaMapperMethodGenerator {
 
     private boolean isSimple;
-    
+
     public SelectByPrimaryKeyMethodGenerator(boolean isSimple) {
         super();
         this.isSimple = isSimple;
@@ -43,16 +43,15 @@ public class SelectByPrimaryKeyMethodGenerator extends
 
     @Override
     public void addInterfaceElements(Interface interfaze) {
-        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
-        Method method = new Method();
+        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<>();
+        Method method = new Method(introspectedTable.getSelectByPrimaryKeyStatementId());
         method.setVisibility(JavaVisibility.PUBLIC);
+        method.setAbstract(true);
 
         FullyQualifiedJavaType returnType = introspectedTable.getRules()
                 .calculateAllFieldsClass();
         method.setReturnType(returnType);
         importedTypes.add(returnType);
-
-        method.setName(introspectedTable.getSelectByPrimaryKeyStatementId());
 
         if (!isSimple && introspectedTable.getRules().generatePrimaryKeyClass()) {
             FullyQualifiedJavaType type = new FullyQualifiedJavaType(
@@ -88,7 +87,7 @@ public class SelectByPrimaryKeyMethodGenerator extends
                 method.addParameter(parameter);
             }
         }
-        
+
         addMapperAnnotations(interfaze, method);
 
         context.getCommentGenerator().addGeneralMethodComment(method,
@@ -96,12 +95,15 @@ public class SelectByPrimaryKeyMethodGenerator extends
 
         if (context.getPlugins().clientSelectByPrimaryKeyMethodGenerated(
                 method, interfaze, introspectedTable)) {
+            addExtraImports(interfaze);
             interfaze.addImportedTypes(importedTypes);
             interfaze.addMethod(method);
         }
     }
 
     public void addMapperAnnotations(Interface interfaze, Method method) {
-        return;
+    }
+
+    public void addExtraImports(Interface interfaze) {
     }
 }

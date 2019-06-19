@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2015 the original author or authors.
+ *    Copyright 2006-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,22 +17,25 @@ package org.mybatis.generator.api.dom;
 
 import org.mybatis.generator.api.XmlFormatter;
 import org.mybatis.generator.api.dom.xml.Document;
+import org.mybatis.generator.api.dom.xml.render.DocumentRenderer;
 import org.mybatis.generator.config.Context;
 
 /**
  * This class is the default formatter for generated XML.  This class will use the
- * built in formatting of the DOM classes directly.
+ * built in document renderer.
  * 
  * @author Jeff Butler
  *
  */
 public class DefaultXmlFormatter implements XmlFormatter {
     protected Context context;
-    
+
+    @Override
     public String getFormattedContent(Document document) {
-        return document.getFormattedContent();
+        return new DocumentRenderer().render(document);
     }
 
+    @Override
     public void setContext(Context context) {
         this.context = context;
     }

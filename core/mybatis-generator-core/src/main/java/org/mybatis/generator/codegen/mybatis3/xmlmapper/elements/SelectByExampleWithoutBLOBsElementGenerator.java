@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2015 the original author or authors.
+ *    Copyright 2006-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ public class SelectByExampleWithoutBLOBsElementGenerator extends
         sb.append("from "); //$NON-NLS-1$
         sb.append(introspectedTable
                 .getAliasedFullyQualifiedTableNameAtRuntime());
-        answer.addElement((new TextElement(sb.toString())));
+        answer.addElement(new TextElement(sb.toString()));
         answer.addElement(getExampleIncludeElement());
 
         ifElement = new XmlElement("if"); //$NON-NLS-1$

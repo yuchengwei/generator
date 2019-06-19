@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2015 the original author or authors.
+ *    Copyright 2006-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -38,32 +38,35 @@ public class InsertSelectiveMethodGenerator extends
 
     @Override
     public void addInterfaceElements(Interface interfaze) {
-        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
-        Method method = new Method();
+        Method method = new Method(introspectedTable.getInsertSelectiveStatementId());
 
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setVisibility(JavaVisibility.PUBLIC);
-        method.setName(introspectedTable.getInsertSelectiveStatementId());
+        method.setAbstract(true);
 
         FullyQualifiedJavaType parameterType = introspectedTable.getRules()
                 .calculateAllFieldsClass();
 
+        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<>();
         importedTypes.add(parameterType);
         method.addParameter(new Parameter(parameterType, "record")); //$NON-NLS-1$
 
         context.getCommentGenerator().addGeneralMethodComment(method,
                 introspectedTable);
 
-        addMapperAnnotations(interfaze, method);
+        addMapperAnnotations(method);
         
         if (context.getPlugins().clientInsertSelectiveMethodGenerated(
                 method, interfaze, introspectedTable)) {
+            addExtraImports(interfaze);
             interfaze.addImportedTypes(importedTypes);
             interfaze.addMethod(method);
         }
     }
 
-    public void addMapperAnnotations(Interface interfaze, Method method) {
-        return;
+    public void addMapperAnnotations(Method method) {
+    }
+
+    public void addExtraImports(Interface interfaze) {
     }
 }

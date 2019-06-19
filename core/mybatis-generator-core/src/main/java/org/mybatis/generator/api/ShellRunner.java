@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2015 the original author or authors.
+ *    Copyright 2006-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ public class ShellRunner {
             return;
         }
 
-        List<String> warnings = new ArrayList<String>();
+        List<String> warnings = new ArrayList<>();
 
         String configfile = arguments.get(CONFIG_FILE);
         File configurationFile = new File(configfile);
@@ -79,7 +79,7 @@ public class ShellRunner {
             return;
         }
 
-        Set<String> fullyqualifiedTables = new HashSet<String>();
+        Set<String> fullyqualifiedTables = new HashSet<>();
         if (arguments.containsKey(TABLES)) {
             StringTokenizer st = new StringTokenizer(arguments.get(TABLES), ","); //$NON-NLS-1$
             while (st.hasMoreTokens()) {
@@ -90,7 +90,7 @@ public class ShellRunner {
             }
         }
 
-        Set<String> contexts = new HashSet<String>();
+        Set<String> contexts = new HashSet<>();
         if (arguments.containsKey(CONTEXT_IDS)) {
             StringTokenizer st = new StringTokenizer(
                     arguments.get(CONTEXT_IDS), ","); //$NON-NLS-1$
@@ -138,7 +138,6 @@ public class ShellRunner {
             return;
         } catch (InterruptedException e) {
             // ignore (will never happen with the DefaultShellCallback)
-            ;
         }
 
         for (String warning : warnings) {
@@ -155,8 +154,8 @@ public class ShellRunner {
 
     private static void usage() {
         String lines = getString("Usage.Lines"); //$NON-NLS-1$
-        int iLines = Integer.parseInt(lines);
-        for (int i = 0; i < iLines; i++) {
+        int intLines = Integer.parseInt(lines);
+        for (int i = 0; i < intLines; i++) {
             String key = "Usage." + i; //$NON-NLS-1$
             writeLine(getString(key));
         }
@@ -171,8 +170,8 @@ public class ShellRunner {
     }
 
     private static Map<String, String> parseCommandLine(String[] args) {
-        List<String> errors = new ArrayList<String>();
-        Map<String, String> arguments = new HashMap<String, String>();
+        List<String> errors = new ArrayList<>();
+        Map<String, String> arguments = new HashMap<>();
 
         for (int i = 0; i < args.length; i++) {
             if (CONFIG_FILE.equalsIgnoreCase(args[i])) {

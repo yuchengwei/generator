@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2015 the original author or authors.
+ *    Copyright 2006-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -43,8 +43,8 @@ import org.mybatis.generator.codegen.RootClassInfo;
  */
 public class RecordWithBLOBsGenerator extends AbstractJavaGenerator {
 
-    public RecordWithBLOBsGenerator() {
-        super();
+    public RecordWithBLOBsGenerator(String project) {
+        super(project);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class RecordWithBLOBsGenerator extends AbstractJavaGenerator {
 
         if (introspectedTable.isConstructorBased()) {
             addParameterizedConstructor(topLevelClass);
-            
+
             if (!introspectedTable.isImmutable()) {
                 addDefaultConstructor(topLevelClass);
             }
@@ -108,19 +108,18 @@ public class RecordWithBLOBsGenerator extends AbstractJavaGenerator {
             }
         }
 
-        List<CompilationUnit> answer = new ArrayList<CompilationUnit>();
+        List<CompilationUnit> answer = new ArrayList<>();
         if (context.getPlugins().modelRecordWithBLOBsClassGenerated(
                 topLevelClass, introspectedTable)) {
             answer.add(topLevelClass);
         }
         return answer;
     }
-    
+
     private void addParameterizedConstructor(TopLevelClass topLevelClass) {
-        Method method = new Method();
+        Method method = new Method(topLevelClass.getType().getShortName());
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setConstructor(true);
-        method.setName(topLevelClass.getType().getShortName());
         context.getCommentGenerator().addGeneralMethodComment(method, introspectedTable);
         
         for (IntrospectedColumn introspectedColumn : introspectedTable
@@ -129,7 +128,7 @@ public class RecordWithBLOBsGenerator extends AbstractJavaGenerator {
                     introspectedColumn.getJavaProperty()));
             topLevelClass.addImportedType(introspectedColumn.getFullyQualifiedJavaType());
         }
-        
+
         boolean comma = false;
         StringBuilder sb = new StringBuilder();
         sb.append("super("); //$NON-NLS-1$

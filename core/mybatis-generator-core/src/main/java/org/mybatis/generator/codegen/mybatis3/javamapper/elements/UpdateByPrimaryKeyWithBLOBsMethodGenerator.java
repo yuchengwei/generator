@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2015 the original author or authors.
+ *    Copyright 2006-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public class UpdateByPrimaryKeyWithBLOBsMethodGenerator extends
 
     @Override
     public void addInterfaceElements(Interface interfaze) {
-        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
+        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<>();
         FullyQualifiedJavaType parameterType;
 
         if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
@@ -51,28 +51,31 @@ public class UpdateByPrimaryKeyWithBLOBsMethodGenerator extends
 
         importedTypes.add(parameterType);
 
-        Method method = new Method();
+        Method method = new Method(introspectedTable
+                .getUpdateByPrimaryKeyWithBLOBsStatementId());
         method.setVisibility(JavaVisibility.PUBLIC);
+        method.setAbstract(true);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
 
-        method.setName(introspectedTable
-            .getUpdateByPrimaryKeyWithBLOBsStatementId());
         method.addParameter(new Parameter(parameterType, "record")); //$NON-NLS-1$
 
         context.getCommentGenerator().addGeneralMethodComment(method,
                 introspectedTable);
 
-        addMapperAnnotations(interfaze, method);
+        addMapperAnnotations(method);
 
         if (context.getPlugins()
                 .clientUpdateByPrimaryKeyWithBLOBsMethodGenerated(method,
                         interfaze, introspectedTable)) {
+            addExtraImports(interfaze);
             interfaze.addImportedTypes(importedTypes);
             interfaze.addMethod(method);
         }
     }
 
-    public void addMapperAnnotations(Interface interfaze, Method method) {
-        return;
+    public void addMapperAnnotations(Method method) {
+    }
+
+    public void addExtraImports(Interface interfaze) {
     }
 }

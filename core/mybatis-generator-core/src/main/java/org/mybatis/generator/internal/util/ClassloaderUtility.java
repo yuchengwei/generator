@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2015 the original author or authors.
+ *    Copyright 2006-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -33,13 +34,13 @@ import java.util.List;
 public class ClassloaderUtility {
 
     /**
-     * Utility Class - No Instances
+     * Utility Class - No Instances.
      */
     private ClassloaderUtility() {
     }
 
-    public static ClassLoader getCustomClassloader(List<String> entries) {
-        List<URL> urls = new ArrayList<URL>();
+    public static ClassLoader getCustomClassloader(Collection<String> entries) {
+        List<URL> urls = new ArrayList<>();
         File file;
 
         if (entries != null) {

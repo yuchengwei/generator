@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2015 the original author or authors.
+ *    Copyright 2006-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -44,8 +44,8 @@ import org.mybatis.generator.codegen.RootClassInfo;
  */
 public class PrimaryKeyGenerator extends AbstractJavaGenerator {
 
-    public PrimaryKeyGenerator() {
-        super();
+    public PrimaryKeyGenerator(String project) {
+        super(project);
     }
 
     @Override
@@ -63,13 +63,14 @@ public class PrimaryKeyGenerator extends AbstractJavaGenerator {
 
         String rootClass = getRootClass();
         if (rootClass != null) {
-            topLevelClass.setSuperClass(new FullyQualifiedJavaType(rootClass));
-            topLevelClass.addImportedType(topLevelClass.getSuperClass());
+            FullyQualifiedJavaType rootType = new FullyQualifiedJavaType(rootClass);
+            topLevelClass.setSuperClass(rootType);
+            topLevelClass.addImportedType(rootType);
         }
 
         if (introspectedTable.isConstructorBased()) {
             addParameterizedConstructor(topLevelClass);
-            
+
             if (!introspectedTable.isImmutable()) {
                 addDefaultConstructor(topLevelClass);
             }
@@ -109,21 +110,20 @@ public class PrimaryKeyGenerator extends AbstractJavaGenerator {
             }
         }
 
-        List<CompilationUnit> answer = new ArrayList<CompilationUnit>();
+        List<CompilationUnit> answer = new ArrayList<>();
         if (context.getPlugins().modelPrimaryKeyClassGenerated(
                 topLevelClass, introspectedTable)) {
             answer.add(topLevelClass);
         }
         return answer;
     }
-    
+
     private void addParameterizedConstructor(TopLevelClass topLevelClass) {
-        Method method = new Method();
+        Method method = new Method(topLevelClass.getType().getShortName());
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setConstructor(true);
-        method.setName(topLevelClass.getType().getShortName());
         context.getCommentGenerator().addGeneralMethodComment(method, introspectedTable);
-        
+
         StringBuilder sb = new StringBuilder();
         for (IntrospectedColumn introspectedColumn : introspectedTable
                 .getPrimaryKeyColumns()) {
@@ -137,7 +137,7 @@ public class PrimaryKeyGenerator extends AbstractJavaGenerator {
             sb.append(';');
             method.addBodyLine(sb.toString());
         }
-        
+
         topLevelClass.addMethod(method);
     }
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2015 the original author or authors.
+ *    Copyright 2006-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -56,6 +56,7 @@ public class XmlFileMergerJaxp {
          * attempt to read a DTD. We don't need that support for the merge and
          * it can cause problems on systems that aren't Internet connected.
          */
+        @Override
         public InputSource resolveEntity(String publicId, String systemId)
                 throws SAXException, IOException {
 
@@ -66,7 +67,7 @@ public class XmlFileMergerJaxp {
     }
 
     /**
-     * Utility class - no instances allowed
+     * Utility class - no instances allowed.
      */
     private XmlFileMergerJaxp() {
         super();
@@ -138,7 +139,7 @@ public class XmlFileMergerJaxp {
 
         // remove the old generated elements and any
         // white space before the old nodes
-        List<Node> nodesToDelete = new ArrayList<Node>();
+        List<Node> nodesToDelete = new ArrayList<>();
         NodeList children = existingRootElement.getChildNodes();
         int length = children.getLength();
         for (int i = 0; i < length; i++) {
@@ -162,10 +163,8 @@ public class XmlFileMergerJaxp {
         for (int i = 0; i < length; i++) {
             Node node = children.item(i);
             // don't add the last node if it is only white space
-            if (i == length - 1) {
-                if (isWhiteSpace(node)) {
-                    break;
-                }
+            if (i == length - 1 && isWhiteSpace(node)) {
+                break;
             }
 
             Node newNode = existingDocument.importNode(node, true);

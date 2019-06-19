@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2015 the original author or authors.
+ *    Copyright 2006-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -41,27 +41,30 @@ public class CountByExampleMethodGenerator extends
         FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(
                 introspectedTable.getExampleType());
 
-        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
+        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<>();
         importedTypes.add(fqjt);
 
-        Method method = new Method();
+        Method method = new Method(introspectedTable.getCountByExampleStatementId());
         method.setVisibility(JavaVisibility.PUBLIC);
-        method.setReturnType(FullyQualifiedJavaType.getIntInstance());
-        method.setName(introspectedTable.getCountByExampleStatementId());
+        method.setAbstract(true);
+        method.setReturnType(new FullyQualifiedJavaType("long")); //$NON-NLS-1$
         method.addParameter(new Parameter(fqjt, "example")); //$NON-NLS-1$
         context.getCommentGenerator().addGeneralMethodComment(method,
                 introspectedTable);
 
-        addMapperAnnotations(interfaze, method);
+        addMapperAnnotations(method);
         
         if (context.getPlugins().clientCountByExampleMethodGenerated(method,
                 interfaze, introspectedTable)) {
+            addExtraImports(interfaze);
             interfaze.addImportedTypes(importedTypes);
             interfaze.addMethod(method);
         }
     }
 
-    public void addMapperAnnotations(Interface interfaze, Method method) {
-        return;
+    public void addMapperAnnotations(Method method) {
+    }
+
+    public void addExtraImports(Interface interfaze) {
     }
 }

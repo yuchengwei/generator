@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2015 the original author or authors.
+ *    Copyright 2006-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,23 +17,23 @@ package org.mybatis.generator.plugins;
 
 import java.util.List;
 
-import org.mybatis.generator.api.PluginAdapter;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
+import org.mybatis.generator.api.PluginAdapter;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.api.dom.java.InnerClass;
 import org.mybatis.generator.api.dom.java.JavaVisibility;
 import org.mybatis.generator.api.dom.java.Method;
 import org.mybatis.generator.api.dom.java.Parameter;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
-import org.mybatis.generator.codegen.ibatis2.Ibatis2FormattingUtilities;
+import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
 
 /**
  * This plugin demonstrates adding methods to the example class to enable
  * case-insensitive LIKE searches. It shows hows to construct new methods and
  * add them to an existing class.
  * 
- * This plugin only adds methods for String fields mapped to a JDBC character
+ * <p>This plugin only adds methods for String fields mapped to a JDBC character
  * type (CHAR, VARCHAR, etc.)
  * 
  * @author Jeff Butler
@@ -41,13 +41,11 @@ import org.mybatis.generator.codegen.ibatis2.Ibatis2FormattingUtilities;
  */
 public class CaseInsensitiveLikePlugin extends PluginAdapter {
 
-    /**
-     * 
-     */
     public CaseInsensitiveLikePlugin() {
         super();
     }
 
+    @Override
     public boolean validate(List<String> warnings) {
         return true;
     }
@@ -77,22 +75,21 @@ public class CaseInsensitiveLikePlugin extends PluginAdapter {
                 continue;
             }
 
-            Method method = new Method();
-            method.setVisibility(JavaVisibility.PUBLIC);
-            method.addParameter(new Parameter(introspectedColumn
-                    .getFullyQualifiedJavaType(), "value")); //$NON-NLS-1$
-
             StringBuilder sb = new StringBuilder();
             sb.append(introspectedColumn.getJavaProperty());
             sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
             sb.insert(0, "and"); //$NON-NLS-1$
             sb.append("LikeInsensitive"); //$NON-NLS-1$
-            method.setName(sb.toString());
+            Method method = new Method(sb.toString());
+            method.setVisibility(JavaVisibility.PUBLIC);
+            method.addParameter(new Parameter(introspectedColumn
+                    .getFullyQualifiedJavaType(), "value")); //$NON-NLS-1$
+
             method.setReturnType(FullyQualifiedJavaType.getCriteriaInstance());
 
             sb.setLength(0);
             sb.append("addCriterion(\"upper("); //$NON-NLS-1$
-            sb.append(Ibatis2FormattingUtilities
+            sb.append(MyBatis3FormattingUtilities
                     .getAliasedActualColumnName(introspectedColumn));
             sb.append(") like\", value.toUpperCase(), \""); //$NON-NLS-1$
             sb.append(introspectedColumn.getJavaProperty());

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2015 the original author or authors.
+ *    Copyright 2006-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public class CountByExampleElementGenerator extends AbstractXmlElementGenerator 
         answer.addAttribute(new Attribute(
                 "id", introspectedTable.getCountByExampleStatementId())); //$NON-NLS-1$
         answer.addAttribute(new Attribute("parameterType", fqjt)); //$NON-NLS-1$
-        answer.addAttribute(new Attribute("resultType", "java.lang.Integer")); //$NON-NLS-1$ //$NON-NLS-2$
+        answer.addAttribute(new Attribute("resultType", "java.lang.Long")); //$NON-NLS-1$ //$NON-NLS-2$
 
         context.getCommentGenerator().addComment(answer);
 
